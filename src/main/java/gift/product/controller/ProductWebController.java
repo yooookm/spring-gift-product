@@ -10,15 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductWebController {
     private final HashMapProductRepository productRepository = new HashMapProductRepository();
     private static final Logger logger = LoggerFactory.getLogger(ProductWebController.class);
@@ -34,13 +36,13 @@ public class ProductWebController {
     }
 
     // 상품 추가 페이지
-    @GetMapping("/add")
+    @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("productReq", new CreateProductRequest());
         return "add_product";
     }
 
-    @PostMapping("/save")
+    @PostMapping
     public String saveProduct(@Valid @ModelAttribute CreateProductRequest productReq,
                               RedirectAttributes redirectAttributes) {
         logger.info("addProduct : {} {} {}", productReq.getName(), productReq.getPrice(), productReq.getImageUrl());
@@ -50,14 +52,14 @@ public class ProductWebController {
     }
 
     //상품 수정 페이지
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/details")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         ProductResponse product = productRepository.findProduct(id);
         model.addAttribute("productReq", product);
         return "edit_product";
     }
 
-    @PostMapping("/update")
+    @PutMapping
     public String updateProduct(@ModelAttribute UpdateProductRequest updateProductRequest,
                                 RedirectAttributes redirectAttributes) {
         productRepository.updateProduct(updateProductRequest);
@@ -65,7 +67,7 @@ public class ProductWebController {
         return "redirect:/product";
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productRepository.deleteProduct(id);
         return "redirect:/product";
