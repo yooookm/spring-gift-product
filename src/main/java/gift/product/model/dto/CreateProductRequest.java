@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 
-public class PostProductReq {
+public class CreateProductRequest {
     @NotNull
     private String name;
     @NotNull

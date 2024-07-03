@@ -1,9 +1,9 @@
 package gift.product.controller;
 
 import gift.product.model.ProductDao;
-import gift.product.model.dto.GetProductRes;
-import gift.product.model.dto.PatchProductReq;
-import gift.product.model.dto.PostProductReq;
+import gift.product.model.dto.CreateProductRequest;
+import gift.product.model.dto.ProductResponse;
+import gift.product.model.dto.UpdateProductRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -27,28 +27,28 @@ public class ProductController {
 
 
     @GetMapping("/product")
-    public ResponseEntity<GetProductRes> findProductById(@RequestParam(value = "id") Long id) {
-        final GetProductRes response = productDao.findProduct(id);
+    public ResponseEntity<ProductResponse> findProductById(@RequestParam(value = "id") Long id) {
+        final ProductResponse response = productDao.findProduct(id);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<GetProductRes>> findAllProduct() {
-        final List<GetProductRes> response = productDao.findAllProduct();
+    public ResponseEntity<List<ProductResponse>> findAllProduct() {
+        final List<ProductResponse> response = productDao.findAllProduct();
         return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/product")
-    public ResponseEntity<String> addProduct(@Valid @RequestBody PostProductReq postProductReq) {
-        if (productDao.addProduct(postProductReq) > 0) {
+    public ResponseEntity<String> addProduct(@Valid @RequestBody CreateProductRequest createProductRequest) {
+        if (productDao.addProduct(createProductRequest) > 0) {
             return ResponseEntity.status(HttpStatus.CREATED).body("ok");
         }
         throw new IllegalArgumentException("상품 추가 실패");
     }
 
     @PatchMapping("/product")
-    public ResponseEntity<String> updateProduct(@Valid @RequestBody PatchProductReq patchProductReq) {
-        if (productDao.updateProduct(patchProductReq) > 0) {
+    public ResponseEntity<String> updateProduct(@Valid @RequestBody UpdateProductRequest updateProductRequest) {
+        if (productDao.updateProduct(updateProductRequest) > 0) {
             return ResponseEntity.ok().body("ok");
         }
         throw new IllegalArgumentException("상품 수정 실패");
